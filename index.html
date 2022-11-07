@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>打气球文件</title>
+		<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css"/>
+		<style>
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			body{
+				background: lightgoldenrodyellow;
+				/*position: relative;
+				bottom: 0;
+				right: 0;*/
+				overflow: hidden;
+			}
+			@font-face {
+				font-family:myfont;
+				src: url("fonts/PinyonScript-Regular.ttf");
+			}
+			ol li{
+				list-style: none;
+			}
+			.balloon{
+				position: absolute;
+				left: 0;
+				bottom: 0;
+				width: 160px;
+				height: 160px;
+				background:greenyellow;
+				/*左上，右上，右下，左下*/
+				border-radius:160px 160px 64px 160px;
+				transform: rotate(45deg);
+				box-shadow:-8px -8px 80px navajowhite inset;
+			}
+			.balloon:after{
+				content:"";
+				border:8px solid transparent;
+				/*border-top-color:red;
+				border-bottom-color:green;
+				border-left-color:blue;*/
+				border-right-color:#873940;
+				transform: rotate(45deg);
+				position: absolute;  /*变成小正方形*/
+				bottom: 0;
+				right: 0;
+			}
+			#action{
+				width: 650px;
+				height: 550px;
+				background: yellow;
+				position: absolute;
+				top: 17%;
+				left: 30%;
+				background-image: url(img/3671s.jpg);
+				background-position: center;
+				background-size:650px 550px ;
+			}
+			#action p{
+				font-family:"myfont";
+				font-size: 4em;
+				font-weight: bold;
+				text-align: center;
+				margin-bottom: 2rem;
+				margin-top: 0.2em;
+				text-shadow: 5px 5px 0.3rem #62819d;
+				color: rgba(245,241,240,.8);
+				animation: move 1s linear infinite;
+			}
+			@keyframes move{
+				0%{transform: translateX(-1px);}
+				10%{transform: translateX(1px);}
+				20%{transform: translateX(-2px);}
+				30%{transform: translateX(2px);}
+				40%{transform: translateX(-4px);}
+				50%{transform: translateX(4px);}
+				60%{transform: translateX(-4px);}
+				70%{transform: translateX(-2px);}
+				80%{transform: translateX(2px);}
+				90%{transform: translateX(-1px);}
+				100%{transform: translateX(1px);}
+			}
+			div.ol{
+				width:60%;
+				height: 50px;
+				background: rgba(213,235,199,.5);
+				display: flex;
+				justify-content: space-around;
+				align-items: center;
+				margin: 0 auto;
+			}
+			div.text{
+				color: white;
+				font-size: 20px;
+				font-family: "微软雅黑";
+			}
+			#li1{
+				width: 25px;
+				height: 25px;
+				background-color: green;
+				cursor: pointer;
+			}
+			#li2{
+				width: 25px;
+				height: 25px;
+				background-color: black;
+				cursor: pointer;
+			}
+			#li3{
+				width: 25px;
+				height: 25px;
+				background-color: black;
+				cursor: pointer;
+			}
+			input{
+				width: 150px;
+				height:50px;
+				/*background-image: linear-gradient(to right,);*/
+				background: #FC975C;
+				border-radius: 15px;
+				border: 4px solid #E62707;
+				color: #F8F69A;
+				font-size: 1.5em;
+				font-weight: bold;
+				margin: 80px 250px;
+				cursor: pointer;
+			}
+			input:last-child{
+				margin: 0px 250px;
+			}
+			.score{
+				position: absolute;
+				padding: 15px;
+				font-size: 25px;
+				font-weight: bold;
+				display: none;
+			}
+			#time{
+				width:120px;
+				display: flex;
+				float: left;
+				margin: auto;
+				padding-top:15px;
+				font-size: 32px;
+				margin-right:15px;
+				position: absolute;
+				right: 0;
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<p class="score">得分:</p>
+		<div id="action">
+			<p>Pop Balloons </p>
+			<div class="ol">
+				<div class="text">难度</div>
+				<div id="li1"></div>
+				<div id="li2" onmouseup="myFunction1(num)"></div>
+				<div id="li3" onmouseup="myFunction2(num)"></div>
+			</div>
+			<input type="button"  value="开始游戏" id="bt"/>
+			<input type="submit" value="更多游戏" />
+		</div>
+		<div id="time">
+				<p id="time-H">00</p><span>:</span>
+				<p id="time-M">00</p><span>:</span>
+				<p id="time-S">00</p>
+			</div>
+		<!--<div class="balloon"></div>-->
+		<script>
+			/*气球数量*/
+			/*var num=5;*/
+			/*var num=window.prompt("你第一次想生成多少个气球")*/
+			var obody=document.body
+			/*窗口宽,高*/
+			var wW=window.innerWidth;
+			var wH=window.innerHeight;
+			var time=null;
+			var button=document.getElementsByTagName("input")[0]
+			var ool=document.getElementsByClassName("ol")
+			var oli1=document.getElementById("li1")
+			var oli2=document.getElementById("li2")
+			var oli3=document.getElementById("li3")
+			var oaction=document.getElementById("action")
+			var oscore=document.getElementsByClassName("score")[0]
+			var otime=document.getElementById("time")
+			/*生成气球对象num个*/
+			function display (arr) { 
+				if (arr<10) {
+					return "0"+arr;
+				}
+				else{
+					return arr;
+				}
+			}
+			var num;
+			var time;
+			button.onclick=function kkk (){
+				 init(15,1)
+				 if(oli2.style.backgroundColor=='green'){
+				 	init(3,8)
+       				 }
+				 if(oli3.style.backgroundColor=='green'){
+            		init(4,11)
+        			}
+				 oaction.style.display="none"
+				 oscore.style.display="block"
+				 otime.style.display="flex"
+		/*秒表时间*/		 
+			var clear=setInterval(function(){
+						time++;
+						document.getElementById("time-S").innerHTML=display(time%60);
+						document.getElementById("time-M").innerHTML=display(parseInt((time/60))%60);
+						document.getElementById("time-H").innerHTML=display(parseInt((time/3600)));
+							/*while (time==10){
+								alert("游戏结束"+"得分为"+a+"分")
+								clearInterval(clear)
+								return  oaction.style.display="block";
+							}*/ 
+							  
+					},1000)	
+					
+					
+					
+					
+			}
+			
+			/*oli1.onclick=function(){
+				this.style.backgroundColor="green";
+				
+			}*/
+			/*oli2.onmousedown=function(){
+				this.style.backgroundColor="green";
+				
+			}
+			oli3.onmousedown=function(){
+				this.style.backgroundColor="green";
+			}*/
+			/*======================================================*/
+
+    function myFunction1(num){
+        if(oli2.style.backgroundColor=='black'){
+            oli2.style.backgroundColor='green';
+        }else{
+            oli2.style.backgroundColor='black';
+            oli3.style.backgroundColor='black';
+        }
+    }
+    function myFunction2(num){
+        if(oli3.style.backgroundColor=='black'){
+            oli3.style.backgroundColor='green';
+            oli2.style.backgroundColor='green';
+        }else{
+            oli3.style.backgroundColor='black';
+        } 
+    }
+	/*======================================================*/
+			
+			var	oarticle=document.createElement("article")
+				obody.appendChild(oarticle)
+				oarticle.style.width="50px"
+				oarticle.style.height="55px"
+				/*oarticle.style.backgroundColor="red" */
+				oarticle.style.color="black"
+				oarticle.style.fontSize="25px"
+				oarticle.style.fontWeight="bold"
+				oarticle.style.marginLeft="80px"
+				oarticle.style.textAlign="left"
+				oarticle.style.lineHeight="65px"
+				
+				
+			function init(num,fast){
+			for (var a=0;a<num;a++) {
+				var balloon=document.createElement("div")
+				obody.appendChild(balloon)
+				balloon.className="balloon"
+				var randoml=Math.random()*wW;
+				randoml=Math.min(randoml,wW-160)
+				balloon.style.left=randoml+"px"
+				balloon.style.top=wH+"px"
+				speed(fast)
+				}
+			
+			}
+			function speed(fast){
+				var balloon=document.createElement("div")
+				obody.appendChild(balloon)
+				balloon.className="balloon"
+				var randoml=Math.random()*wW;
+				randoml=Math.min(randoml,wW-160)
+				balloon.style.left=randoml+"px"
+				balloon.style.top=wH+"px"
+				balloon.speed=Math.random()*5+fast/*设置初始化速度*/
+				/*var time=setInterval(function(){
+				move(odiv);
+			},10)*/
+			
+			}
+			init(num,5)
+			var a=0;
+			time=setInterval(function(){
+				var oball=document.querySelectorAll(".balloon")
+				for (var i=0,len=oball.length;i<len;i++) {
+					oball[i].style.top=oball[i].offsetTop-oball[i].speed+"px"
+					/*气球单击后*/
+					oball[i].onclick=function(){
+						/*气球没了*/
+						crash(this);
+						a++;
+						/*底部又生成一个*/
+						init(1,5)
+						oarticle.innerHTML=a
+						
+						while (a==5){
+								alert("游戏结束"+"用时为"+time+"秒");
+								window.location.reload();
+								return  a=0;
+								/*document.getElementById("time-S").innerHTML='00'
+								clearInterval(clear) */
+								
+								
+								
+								
+							}
+					} 
+				} 
+			},30)
+			
+				function crash(del){
+			/*del.a=
+			del.clearInterval()
+				clearInterval(time);*/
+				del.timeouter=setTimeout(function(){
+					clearInterval(del.b);
+					del.parentNode.removeChild(del)
+				},1000)		
+			del.b=setInterval(function(){
+				del.speed++;
+				del.style.top=del.offsetTop-del.speed+"px"
+				del.style.width=del.offsetWidth-10+"px"
+				del.style.height=del.offsetHeight-10+"px"
+				
+			},30)
+		}	
+	/*结束页面*/
+	function relodepage(){
+		location.replace("file:///D:/HBuilder/Html文件/5.6大气球/index.html")
+	}
+		</script>
+		
+	</body>
+</html>
